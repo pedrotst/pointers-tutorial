@@ -3,14 +3,12 @@
 #include <stdlib.h>
 #include <math.h>
 
-struct node {
+typedef struct node {
   void *x;
   struct node *next;
   void (*print_x)(void *);
   void (*free_x)(void *);
-};
-
-typedef struct node my_list;
+} my_list ;
 
 void free_int(void *x){
   free((int*)x);
@@ -38,6 +36,7 @@ void print_list(my_list *head){
   }
 
   while(head != NULL){
+    printf(", ");
     head->print_x(head->x);
     head = head->next;
   }
@@ -64,17 +63,20 @@ int main(){
   head->x = x;
   head->print_x = &print_int;
   head->free_x = &free_int;
-
   head->next = NULL;
+
   head->next = malloc(sizeof(my_list));
   x = malloc(sizeof(int));
   *x = 6;
   head->next->x = x;
+  head->next->free_x = &free_int;
+  head->next->print_x = &print_int;
   head->next->next = NULL;
 
   print_list(head);
 
   remove_first(&head);
+
   print_list(head);
 
   free_list(head);
